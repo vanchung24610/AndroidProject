@@ -33,5 +33,13 @@
         android:text="@string/change_brightness"
         
         />
+    <Switch 
+        android:id="@+id/switch_mobile_data"
+        android:layout_below="@+id/change_brightness"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="switchMobileData"
+        android:text="@string/switch_mobile_data"
+        />
                 
 </RelativeLayout>

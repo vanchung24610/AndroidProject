@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
 	<string name="switch_wifi">Switch Wifi</string>
 	<string name="switch_bluetooth">Switch Bluetooth</string>
+	<string name="switch_mobile_data">Switch Mobile Data</string>
 	<string name="change_brightness">Change Brightness And Lock Screen Time Out</string>
 </resources>

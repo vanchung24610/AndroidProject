@@ -1,14 +1,18 @@
 package com.example.testwifiswitchh;
 
+import java.lang.reflect.Method;
+
 import org.apache.http.impl.conn.Wire;
 
 import android.R.bool;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.media.ToneGenerator;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +39,12 @@ public class MainActivity extends ActionBarActivity {
 	static WifiManager wifi;
 	static BluetoothAdapter mBluetoothAdapter;
 	static Button change_brightness;
+	static Switch switch_mobile_data;
+	static Method dataConnSwitchmethod;
+    static Class telephonyManagerClass;
+    static Object ITelephonyStub;
+    static Class ITelephonyClass;
+    static TelephonyManager telephonyManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +112,18 @@ public class MainActivity extends ActionBarActivity {
             }
             //init change screen brightness
             change_brightness = (Button) rootView.findViewById(R.id.change_brightness);
+            //init mobile data connect
+            switch_mobile_data = (Switch) rootView.findViewById(R.id.switch_mobile_data);
+            telephonyManager = (TelephonyManager) getActivity().getApplicationContext()
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+
+            if(telephonyManager.getDataState() == TelephonyManager.DATA_CONNECTED){
+            	switch_mobile_data.setChecked(true);
+            }else{
+                switch_mobile_data.setChecked(true);
+            }
             return rootView;
+                        
         }
         
     }
@@ -147,6 +168,35 @@ public class MainActivity extends ActionBarActivity {
     	//change lock screen time out
     	Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, 20);
     }
+    //set state for mobile data connect
+    //still pending
+    public void switchMobileData(View view){
+    	switch_mobile_data.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+				try{telephonyManagerClass = Class.forName(telephonyManager.getClass().getName());
+			    Method getITelephonyMethod = telephonyManagerClass.getDeclaredMethod("getITelephony");
+			    getITelephonyMethod.setAccessible(true);
+			    ITelephonyStub = getITelephonyMethod.invoke(telephonyManager);
+			    ITelephonyClass = Class.forName(ITelephonyStub.getClass().getName());
+				
+				if(isChecked){
+					dataConnSwitchmethod = ITelephonyClass.getDeclaredMethod("enableDataConnectivity"); 
+				}else{
+					dataConnSwitchmethod = ITelephonyClass.getDeclaredMethod("disableDataConnectivity");
+				}
+				dataConnSwitchmethod.setAccessible(true);
+			    dataConnSwitchmethod.invoke(ITelephonyStub);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+				
+			}
+		});
+    }
+    
     public void switchBluetooth(View view){
     	//set click on/off bluetooth
     	switch_bluetooth.setOnCheckedChangeListener(new OnCheckedChangeListener() {
