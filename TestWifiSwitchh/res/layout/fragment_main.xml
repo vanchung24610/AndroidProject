@@ -23,5 +23,15 @@
         android:onClick="switchBluetooth"
         android:text="@string/switch_bluetooth"
         />
+    
+    <Button 
+        android:id="@+id/change_brightness"
+        android:layout_below="@+id/switch_bluetooth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="setBrightness"
+        android:text="@string/change_brightness"
+        
+        />
                 
 </RelativeLayout>

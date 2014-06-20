@@ -16,14 +16,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.os.Build;
+import android.provider.Settings;
 import android.provider.DocumentsContract.Root;
 
 public class MainActivity extends ActionBarActivity { 
@@ -31,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
 	static Switch switch_bluetooth;
 	static WifiManager wifi;
 	static BluetoothAdapter mBluetoothAdapter;
+	static Button change_brightness;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +100,8 @@ public class MainActivity extends ActionBarActivity {
             		switch_bluetooth.setChecked(false);
             	}
             }
+            //init change screen brightness
+            change_brightness = (Button) rootView.findViewById(R.id.change_brightness);
             return rootView;
         }
         
@@ -119,6 +125,27 @@ public class MainActivity extends ActionBarActivity {
 				
 			}
 		});
+    }
+    
+    //set screen brightness
+    public void setBrightness(View view){
+    	change_brightness.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				changeBrightness();
+				changeLockScreenTimeOut();
+			}
+		});
+    }	
+    public void changeBrightness(){
+    	//change screen brightness
+    	Settings.System.putInt(getContentResolver(),Settings.System.SCREEN_BRIGHTNESS, 20);
+    	Toast.makeText(this, "Changed",Toast.LENGTH_LONG).show();;
+    }
+    public void changeLockScreenTimeOut(){
+    	//change lock screen time out
+    	Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, 20);
     }
     public void switchBluetooth(View view){
     	//set click on/off bluetooth
